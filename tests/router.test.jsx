@@ -1,7 +1,17 @@
 import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, useRoutes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
+import { CasesPage } from "../src/pages/CasesPage.jsx";
 import { routes } from "../src/router.jsx";
+
+const configuredCase = {
+  id: "sample-one",
+  title: "测试短剧",
+  category: "人工智能短剧",
+  summary: "用于验证站内播放行为的测试作品。",
+  videoSrc: "https://example.com/sample.mp4",
+  posterSrc: "https://example.com/poster.jpg",
+};
 
 function renderRoute(path) {
   function TestRoutes() {
@@ -80,6 +90,38 @@ describe("页面路由", () => {
     expect(screen.getByRole("heading", { name: "每一帧，都为传播服务" })).toBeInTheDocument();
     expect(screen.getByText("精选项目即将呈现")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "联系获取样片" })).toHaveAttribute("href", "/contact");
+  });
+
+  it("配置作品后显示封面与站内播放入口而不是视频外链", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <CasesPage items={[configuredCase]} />
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("heading", { name: "测试短剧" })).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "测试短剧封面" })).toHaveAttribute(
+      "src",
+      "https://example.com/poster.jpg",
+    );
+    expect(screen.getByRole("button", { name: "播放测试短剧" })).toBeInTheDocument();
+    expect(container.querySelector('a[href="https://example.com/sample.mp4"]')).not.toBeInTheDocument();
+  });
+
+  it("点击作品后直接在当前页面加载视频播放器", () => {
+    const { container } = render(
+      <MemoryRouter>
+        <CasesPage items={[configuredCase]} />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "播放测试短剧" }));
+
+    const video = container.querySelector("video");
+    expect(video).toHaveAttribute("src", "https://example.com/sample.mp4");
+    expect(video).toHaveAttribute("controls");
+    expect(video).toHaveAttribute("autoplay");
+    expect(screen.getByRole("button", { name: "收起测试短剧" })).toBeInTheDocument();
   });
 
   it("联系页说明合作准备信息并保留真实二维码位置", () => {
