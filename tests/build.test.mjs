@@ -8,6 +8,7 @@ const hosting = JSON.parse(
 
 assert.match(html, /<html lang="zh-CN">/);
 assert.match(html, /幻核动漫｜人工智能短剧与广告制作/);
+assert.equal(html.includes("\r"), false, "构建入口必须使用稳定的换行格式");
 assert.match(html, /src="\/assets\/[^"]+\.js"/);
 assert.match(html, /href="\/assets\/[^"]+\.css"/);
 assert.ok(
