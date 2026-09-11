@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:build": "node tests/build.test.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",
