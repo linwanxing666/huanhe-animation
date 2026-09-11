@@ -805,3 +805,27 @@ button {
     transform: none;
   }
 }
+
+.route-page {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  flex: 1;
+  width: min(960px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.route-page h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(42px, 8vw, 92px);
+}
+
+.route-content,
+.video-content,
+.qr-placeholder {
+  min-width: min(360px, 80vw);
+  min-height: 160px;
+}

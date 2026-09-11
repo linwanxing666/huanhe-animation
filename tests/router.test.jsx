@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { MemoryRouter, useRoutes } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import { routes } from "../src/router.jsx";
@@ -23,7 +23,7 @@ describe("页面路由", () => {
     ["/contact", "联系我们"],
   ])("%s 能渲染对应页面", (path, heading) => {
     renderRoute(path);
-    expect(screen.getByText(heading, { exact: false })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: new RegExp(heading) })).toBeInTheDocument();
   });
 
   it("未知地址显示中文返回入口", () => {
@@ -75,5 +75,40 @@ describe("页面路由", () => {
 
     expect(screen.getByText("120")).toBeInTheDocument();
     expect(screen.getByText("30")).toBeInTheDocument();
+  });
+
+  it("桌面导航使用站内路由并标记当前页", () => {
+    renderRoute("/");
+    const desktopNav = screen.getByRole("navigation", { name: "主导航" });
+    const services = within(desktopNav).getByRole("link", { name: "服务" });
+
+    expect(services).toHaveAttribute("href", "/services");
+    fireEvent.click(services);
+
+    expect(screen.getByRole("heading", { name: "服务" })).toBeInTheDocument();
+    expect(services).toHaveClass("active");
+    expect(screen.getByRole("link", { name: "幻核动漫首页" })).toHaveAttribute("href", "/");
+    expect(screen.getByRole("link", { name: "洽谈合作" })).toHaveAttribute("href", "/contact");
+  });
+
+  it("移动菜单在路由切换后关闭", () => {
+    renderRoute("/");
+    const toggle = screen.getByRole("button", { name: "打开导航菜单" });
+    fireEvent.click(toggle);
+    const mobileNav = screen.getByRole("navigation", { name: "移动导航" });
+
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+    fireEvent.click(within(mobileNav).getByRole("link", { name: "案例" }));
+
+    expect(screen.getByRole("heading", { name: "案例视频" })).toBeInTheDocument();
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("移动菜单支持退出键关闭", () => {
+    renderRoute("/");
+    const toggle = screen.getByRole("button", { name: "打开导航菜单" });
+    fireEvent.click(toggle);
+    fireEvent.keyDown(document, { key: "Escape" });
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 });
