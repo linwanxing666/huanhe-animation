@@ -1,0 +1,4 @@
+.worktrees/
+.sites-runtime/
+node_modules/
+
