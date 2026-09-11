@@ -23,7 +23,8 @@ async function run() {
   assert.match(html, /广告商单制作/);
   assert.match(html, /<span>让想象，<\/span>[\s\S]*<span>直接开拍<\/span>/);
   assert.match(html, /aria-label="打开导航菜单"/);
-  assert.match(html, /assets\/logo\.webp/);
+  assert.match(html, /<a class="brand-wordmark"[^>]*>\s*幻核动漫\s*<\/a>/);
+  assert.doesNotMatch(html, /logo-button|assets\/logo\.webp|<img[^>]+logo/i);
   assert.match(html, /fonts\/GeistPixel-Circle\.woff2/);
   assert.doesNotMatch(html, />\s*(Home|Product|Case Studies|Contact|Get Started|Sign in)\s*</i);
 
@@ -42,6 +43,8 @@ async function run() {
   assert.match(css, /\.desktop-nav[\s\S]*display:\s*none/);
   assert.match(css, /@media\s*\(prefers-reduced-motion:\s*reduce\)/);
   assert.match(css, /font-family:\s*"Geist Pixel Circle"/);
+  assert.match(css, /\.brand-wordmark\s*\{/);
+  assert.match(css, /width:\s*min\(860px,\s*100%\)/);
 
   assert.match(js, /setAttribute\("aria-expanded"/);
   assert.match(js, /event\.key === "Escape"/);
@@ -51,7 +54,7 @@ async function run() {
   assert.match(js, /prefers-reduced-motion/);
   assert.match(js, /1500 \+ index \* 80/);
 
-  assert.ok((await stat(path.join(root, "assets", "logo.webp"))).size > 1000);
+  await assert.rejects(stat(path.join(root, "assets", "logo.webp")), { code: "ENOENT" });
   assert.ok((await stat(path.join(root, "fonts", "GeistPixel-Circle.woff2"))).size > 1000);
 
   console.log("页面结构测试通过");

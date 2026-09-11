@@ -126,32 +126,34 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: min(760px, 100%);
+  width: min(860px, 100%);
   margin: 0 auto;
   gap: clamp(14px, 2.4vw, 24px);
 }
 
-.logo-button {
+.brand-wordmark {
   display: grid;
   flex: 0 0 auto;
   place-items: center;
-  width: clamp(42px, 4.4vw, 48px);
+  min-width: clamp(112px, 10.5vw, 126px);
   height: clamp(42px, 4.4vw, 48px);
-  overflow: hidden;
-  border-radius: 50%;
-  background: #fff;
+  padding: 0 clamp(16px, 2vw, 22px);
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
   box-shadow: var(--nav-shadow);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  color: var(--nav-text);
+  font-size: clamp(0.92rem, 1.3vw, 1.04rem);
+  font-weight: 750;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  backdrop-filter: blur(16px);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 }
 
-.logo-button img {
-  width: 76%;
-  height: 76%;
-  object-fit: contain;
-}
-
-.logo-button:hover {
-  transform: scale(1.05) rotate(-2deg);
+.brand-wordmark:hover {
+  background: #fff;
+  transform: translateY(-1px) scale(1.025);
   box-shadow: 0 7px 28px rgba(0, 0, 0, 0.28);
 }
 
@@ -516,16 +518,22 @@ button {
     display: none;
   }
 
-  .logo-button,
   .menu-toggle {
-    width: 48px;
     height: 48px;
+  }
+
+  .brand-wordmark {
+    min-width: 116px;
+    height: 48px;
+    padding: 0 17px;
+    font-size: 0.96rem;
   }
 
   .menu-toggle {
     position: relative;
     z-index: 12;
     display: grid;
+    width: 48px;
     place-content: center;
     gap: 5px;
     padding: 0;
