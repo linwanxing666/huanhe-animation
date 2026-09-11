@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, useRoutes } from "react-router-dom";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { routes } from "../src/router.jsx";
 
 function renderRoute(path) {
@@ -43,5 +43,37 @@ describe("页面路由", () => {
       "src",
       "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260809_012548_ef22562c-c0ae-4816-ad9d-f8922af4e6a7.mp4",
     );
+  });
+
+  it("首页保留现有结构和关键文案", () => {
+    const { container } = renderRoute("/");
+    expect(container.querySelector("main.hero#home")).toBeInTheDocument();
+    expect(container.querySelector(".trust-row.anim#capabilities")).toBeInTheDocument();
+    expect(container.querySelector("footer.stats#proof")).toBeInTheDocument();
+    expect(screen.getByText("短剧与广告一体化制作")).toBeInTheDocument();
+    expect(screen.getByText("人工智能短剧制作")).toBeInTheDocument();
+    expect(screen.getByText("广告商单制作")).toBeInTheDocument();
+    expect(screen.getByText("项目交付")).toBeInTheDocument();
+    expect(screen.getByText("题材覆盖")).toBeInTheDocument();
+    expect(container.textContent).not.toMatch(/[A-Za-z]{2,}/);
+  });
+
+  it("联系页只显示二维码占位，不包含虚构二维码图片", () => {
+    const { container } = renderRoute("/contact");
+    expect(screen.getByText("二维码位置")).toBeInTheDocument();
+    expect(container.querySelector("img")).not.toBeInTheDocument();
+  });
+
+  it("减少动态效果时首页数字直接显示最终值", () => {
+    vi.stubGlobal("matchMedia", () => ({
+      matches: true,
+      addEventListener() {},
+      removeEventListener() {},
+    }));
+
+    renderRoute("/");
+
+    expect(screen.getByText("120")).toBeInTheDocument();
+    expect(screen.getByText("30")).toBeInTheDocument();
   });
 });
