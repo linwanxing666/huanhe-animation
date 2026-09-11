@@ -18,9 +18,9 @@ function renderRoute(path) {
 describe("页面路由", () => {
   it.each([
     ["/", "让想象，"],
-    ["/services", "服务"],
-    ["/cases", "案例视频"],
-    ["/contact", "联系我们"],
+    ["/services", "从创意到成片"],
+    ["/cases", "每一帧，都为传播服务"],
+    ["/contact", "开启下一次创作"],
   ])("%s 能渲染对应页面", (path, heading) => {
     renderRoute(path);
     expect(screen.getByRole("heading", { name: new RegExp(heading) })).toBeInTheDocument();
@@ -60,8 +60,35 @@ describe("页面路由", () => {
 
   it("联系页只显示二维码占位，不包含虚构二维码图片", () => {
     const { container } = renderRoute("/contact");
-    expect(screen.getByText("二维码位置")).toBeInTheDocument();
+    expect(screen.getByText("二维码待上传")).toBeInTheDocument();
     expect(container.querySelector("img")).not.toBeInTheDocument();
+  });
+
+  it("服务页清晰呈现两项核心业务与制作流程", () => {
+    renderRoute("/services");
+
+    expect(screen.getByRole("heading", { name: "从创意到成片" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "人工智能短剧制作" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "广告商单制作" })).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "合作流程" })).toHaveTextContent("需求沟通");
+    expect(screen.getByRole("list", { name: "合作流程" })).toHaveTextContent("成片交付");
+  });
+
+  it("案例页不虚构作品并提供获取样片入口", () => {
+    renderRoute("/cases");
+
+    expect(screen.getByRole("heading", { name: "每一帧，都为传播服务" })).toBeInTheDocument();
+    expect(screen.getByText("精选项目即将呈现")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "联系获取样片" })).toHaveAttribute("href", "/contact");
+  });
+
+  it("联系页说明合作准备信息并保留真实二维码位置", () => {
+    renderRoute("/contact");
+
+    expect(screen.getByRole("heading", { name: "开启下一次创作" })).toBeInTheDocument();
+    expect(screen.getByRole("list", { name: "合作前请准备" })).toHaveTextContent("项目类型");
+    expect(screen.getByRole("list", { name: "合作前请准备" })).toHaveTextContent("交付时间");
+    expect(screen.getByText("二维码待上传")).toBeInTheDocument();
   });
 
   it("减少动态效果时首页数字直接显示最终值", () => {
@@ -85,7 +112,7 @@ describe("页面路由", () => {
     expect(services).toHaveAttribute("href", "/services");
     fireEvent.click(services);
 
-    expect(screen.getByRole("heading", { name: "服务" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "从创意到成片" })).toBeInTheDocument();
     expect(services).toHaveClass("active");
     expect(screen.getByRole("link", { name: "幻核动漫首页" })).toHaveAttribute("href", "/");
     expect(screen.getByRole("link", { name: "洽谈合作" })).toHaveAttribute("href", "/contact");
@@ -100,7 +127,7 @@ describe("页面路由", () => {
     expect(toggle).toHaveAttribute("aria-expanded", "true");
     fireEvent.click(within(mobileNav).getByRole("link", { name: "案例" }));
 
-    expect(screen.getByRole("heading", { name: "案例视频" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "每一帧，都为传播服务" })).toBeInTheDocument();
     expect(toggle).toHaveAttribute("aria-expanded", "false");
   });
 

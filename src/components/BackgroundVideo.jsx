@@ -14,6 +14,8 @@ export function BackgroundVideo() {
         playsInline
       />
       <div className="bg-shade" />
+      <div className="bg-aurora" />
+      <div className="bg-frame" />
       <div className="bg-grain" />
     </div>
   );
