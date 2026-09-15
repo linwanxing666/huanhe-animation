@@ -1,4 +1,5 @@
 .worktrees/
 .sites-runtime/
 node_modules/
-
+dist/covers/
+dist/videos/

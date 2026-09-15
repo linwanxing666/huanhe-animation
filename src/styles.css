@@ -1046,9 +1046,49 @@ button {
 
 .case-gallery {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   gap: 16px;
   padding-bottom: 4px;
+}
+
+.case-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+  padding: 7px;
+  width: fit-content;
+  max-width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  background: rgba(7, 9, 14, 0.48);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px);
+}
+
+.case-filters button {
+  min-height: 38px;
+  padding: 0 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(242, 245, 251, 0.58);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.25s ease, background 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+
+.case-filters button:hover {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.case-filters button[aria-pressed="true"] {
+  border-color: rgba(102, 220, 255, 0.28);
+  background: linear-gradient(135deg, rgba(67, 196, 238, 0.18), rgba(186, 81, 255, 0.12));
+  color: #fff;
+  box-shadow: 0 7px 24px rgba(22, 116, 151, 0.13);
 }
 
 .case-card {
@@ -1063,6 +1103,14 @@ button {
   transition: border-color 0.3s ease, transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+.case-card-landscape {
+  grid-column: span 6;
+}
+
+.case-card-portrait {
+  grid-column: span 4;
+}
+
 .case-card:hover {
   border-color: rgba(255, 255, 255, 0.23);
   transform: translateY(-4px);
@@ -1074,6 +1122,10 @@ button {
   overflow: hidden;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: #05070b;
+}
+
+.case-card-portrait .case-media {
+  aspect-ratio: 9 / 14;
 }
 
 .case-media::after {
@@ -1105,6 +1157,7 @@ button {
   position: relative;
   z-index: 1;
   background: #000;
+  object-fit: contain;
 }
 
 .case-poster-fallback {
@@ -1171,13 +1224,25 @@ button {
   padding: 23px 24px 26px;
 }
 
-.case-meta > span {
-  display: block;
+.case-details {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
   margin-bottom: 10px;
+}
+
+.case-details > span {
   color: rgba(111, 221, 255, 0.7);
-  font-size: 0.72rem;
+  font-size: 0.78rem;
   font-weight: 650;
   letter-spacing: 0.15em;
+}
+
+.case-details > span:last-child {
+  color: rgba(255, 255, 255, 0.42);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.08em;
 }
 
 .case-meta h2 {
@@ -1432,6 +1497,27 @@ button:focus-visible {
     grid-template-columns: 1fr;
   }
 
+  .case-card-landscape,
+  .case-card-portrait {
+    grid-column: auto;
+  }
+
+  .case-filters {
+    flex-wrap: nowrap;
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 18px;
+    scrollbar-width: none;
+  }
+
+  .case-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .case-filters button {
+    flex: 0 0 auto;
+  }
+
   .service-card {
     min-height: 0;
   }
@@ -1475,6 +1561,10 @@ button:focus-visible {
   .case-card,
   .contact-panel {
     border-radius: 24px;
+  }
+
+  .case-card-portrait .case-media {
+    aspect-ratio: 4 / 5;
   }
 
   .case-meta {

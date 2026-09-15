@@ -2,7 +2,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { caseVideos } from "../content/cases.js";
 
-function EmptyCases() {
+const caseCategories = ["全部", "仿真人", "2D动漫", "3D动漫", "游戏广告", "商业广告", "文旅影像"];
+
+function EmptyCases({ category = "全部" }) {
+  const isAll = category === "全部";
+
   return (
     <section className="case-showcase" aria-labelledby="case-coming-title">
       <div className="case-stage" aria-hidden="true">
@@ -12,8 +16,8 @@ function EmptyCases() {
       </div>
       <div className="case-copy">
         <p className="case-status"><span aria-hidden="true" />案例片库筹备中</p>
-        <h2 id="case-coming-title">精选项目即将呈现</h2>
-        <p>真实案例与样片正在整理。需要了解对应题材、画面风格或制作能力，可直接与我们沟通。</p>
+        <h2 id="case-coming-title">{isAll ? "精选项目即将呈现" : `${category}作品正在整理`}</h2>
+        <p>{isAll ? "真实案例与样片正在整理。需要了解对应题材、画面风格或制作能力，可直接与我们沟通。" : "该分类暂无公开作品，需要定向样片可直接与我们沟通。"}</p>
         <Link className="text-link" to="/contact">联系获取样片<span aria-hidden="true">↗</span></Link>
       </div>
     </section>
@@ -22,9 +26,10 @@ function EmptyCases() {
 
 function CaseCard({ item }) {
   const [playing, setPlaying] = useState(false);
+  const orientationClass = item.orientation === "竖屏" ? "case-card-portrait" : "case-card-landscape";
 
   return (
-    <article className="case-card">
+    <article className={`case-card ${orientationClass}`}>
       <div className="case-media">
         {playing ? (
           <video
@@ -58,7 +63,10 @@ function CaseCard({ item }) {
       </div>
 
       <div className="case-meta">
-        <span>{item.category}</span>
+        <div className="case-details">
+          <span>{item.category}</span>
+          {item.duration && <span>{item.duration}</span>}
+        </div>
         <h2>{item.title}</h2>
         <p>{item.summary}</p>
         {playing && (
@@ -77,6 +85,11 @@ function CaseCard({ item }) {
 }
 
 export function CasesPage({ items = caseVideos }) {
+  const [activeCategory, setActiveCategory] = useState("全部");
+  const visibleItems = activeCategory === "全部"
+    ? items
+    : items.filter((item) => item.category === activeCategory);
+
   return (
     <main className="route-page route-cases">
       <div className="route-shell cases-shell">
@@ -86,11 +99,24 @@ export function CasesPage({ items = caseVideos }) {
           <p>用叙事、角色与视觉风格，让内容拥有被看见和被记住的理由。</p>
         </header>
 
-        {items.length > 0 ? (
+        <div className="case-filters" role="group" aria-label="作品分类">
+          {caseCategories.map((category) => (
+            <button
+              type="button"
+              key={category}
+              aria-pressed={activeCategory === category}
+              onClick={() => setActiveCategory(category)}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {visibleItems.length > 0 ? (
           <section className="case-gallery" aria-label="作品列表">
-            {items.map((item) => <CaseCard item={item} key={item.id} />)}
+            {visibleItems.map((item) => <CaseCard item={item} key={item.id} />)}
           </section>
-        ) : <EmptyCases />}
+        ) : <EmptyCases category={activeCategory} />}
       </div>
     </main>
   );

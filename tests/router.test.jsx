@@ -7,10 +7,19 @@ import { routes } from "../src/router.jsx";
 const configuredCase = {
   id: "sample-one",
   title: "测试短剧",
-  category: "人工智能短剧",
+  category: "仿真人",
   summary: "用于验证站内播放行为的测试作品。",
   videoSrc: "https://example.com/sample.mp4",
   posterSrc: "https://example.com/poster.jpg",
+};
+
+const animatedCase = {
+  id: "sample-two",
+  title: "测试三维动漫",
+  category: "3D动漫",
+  summary: "用于验证分类筛选的测试作品。",
+  videoSrc: "https://example.com/animation.mp4",
+  posterSrc: "https://example.com/animation.jpg",
 };
 
 function renderRoute(path) {
@@ -84,12 +93,14 @@ describe("页面路由", () => {
     expect(screen.getByRole("list", { name: "合作流程" })).toHaveTextContent("成片交付");
   });
 
-  it("案例页不虚构作品并提供获取样片入口", () => {
+  it("案例页展示已配置的真实作品", () => {
     renderRoute("/cases");
 
     expect(screen.getByRole("heading", { name: "每一帧，都为传播服务" })).toBeInTheDocument();
-    expect(screen.getByText("精选项目即将呈现")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: "联系获取样片" })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("heading", { name: "渡魂使者" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "二维动漫" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "游戏广告" })).toBeInTheDocument();
+    expect(screen.queryByText("精选项目即将呈现")).not.toBeInTheDocument();
   });
 
   it("配置作品后显示封面与站内播放入口而不是视频外链", () => {
@@ -122,6 +133,39 @@ describe("页面路由", () => {
     expect(video).toHaveAttribute("controls");
     expect(video).toHaveAttribute("autoplay");
     expect(screen.getByRole("button", { name: "收起测试短剧" })).toBeInTheDocument();
+  });
+
+  it("案例页提供七个指定分类并默认展示全部作品", () => {
+    render(
+      <MemoryRouter>
+        <CasesPage items={[configuredCase, animatedCase]} />
+      </MemoryRouter>,
+    );
+
+    const filters = screen.getByRole("group", { name: "作品分类" });
+    ["全部", "仿真人", "2D动漫", "3D动漫", "游戏广告", "商业广告", "文旅影像"].forEach((label) => {
+      expect(within(filters).getByRole("button", { name: label })).toBeInTheDocument();
+    });
+    expect(within(filters).getByRole("button", { name: "全部" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("heading", { name: "测试短剧" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "测试三维动漫" })).toBeInTheDocument();
+  });
+
+  it("切换分类时只展示对应作品，空分类保留筹备状态", () => {
+    render(
+      <MemoryRouter>
+        <CasesPage items={[configuredCase, animatedCase]} />
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "3D动漫" }));
+    expect(screen.queryByRole("heading", { name: "测试短剧" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "测试三维动漫" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "3D动漫" })).toHaveAttribute("aria-pressed", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "商业广告" }));
+    expect(screen.queryByRole("heading", { name: "测试三维动漫" })).not.toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "商业广告作品正在整理" })).toBeInTheDocument();
   });
 
   it("联系页说明合作准备信息并保留真实二维码位置", () => {
