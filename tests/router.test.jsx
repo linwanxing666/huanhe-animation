@@ -108,9 +108,29 @@ describe("页面路由", () => {
     expect(
       screen.getByRole("heading", { name: "被当作小偷赶走，却被亿万富翁选中" }),
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "婚礼上的背叛" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "商业间谍" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "判官" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "全员黑化" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "狼人" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "天使" })).not.toBeInTheDocument();
     expect(screen.queryByText("精选项目即将呈现")).not.toBeInTheDocument();
+  });
+
+  it("新增作品进入确认后的分类", () => {
+    renderRoute("/cases");
+
+    fireEvent.click(screen.getByRole("button", { name: "3D动漫" }));
+    expect(screen.getByRole("heading", { name: "判官" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "婚礼上的背叛" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "商业间谍" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "全员黑化" })).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "仿真人" }));
+    expect(screen.getByRole("heading", { name: "婚礼上的背叛" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "商业间谍" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "全员黑化" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "判官" })).not.toBeInTheDocument();
   });
 
   it("配置作品后显示封面与站内播放入口而不是视频外链", () => {

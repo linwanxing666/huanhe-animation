@@ -15,9 +15,28 @@ assert.match(html, /href="\/assets\/[^"]+\.css"/);
 assert.ok(
   (await stat(new URL("../dist/fonts/GeistPixel-Circle.woff2", import.meta.url))).size > 1000,
 );
-for (const fileName of ["ragnarok-trailer.mp4", "hospital-chaos.mp4", "chosen-by-billionaire.mp4"]) {
+for (const fileName of [
+  "ragnarok-trailer.mp4",
+  "hospital-chaos.mp4",
+  "chosen-by-billionaire.mp4",
+  "wedding-betrayal.mp4",
+  "corporate-spy.mp4",
+  "judge.mp4",
+  "all-corrupted.mp4",
+]) {
   assert.ok(
     (await stat(new URL(`../dist/videos/${fileName}`, import.meta.url))).size > 1_000_000,
+    `${fileName} 必须进入正式构建且不是空文件`,
+  );
+}
+for (const fileName of [
+  "wedding-betrayal.jpg",
+  "corporate-spy.jpg",
+  "judge.jpg",
+  "all-corrupted.jpg",
+]) {
+  assert.ok(
+    (await stat(new URL(`../dist/covers/${fileName}`, import.meta.url))).size > 10_000,
     `${fileName} 必须进入正式构建且不是空文件`,
   );
 }
