@@ -1378,51 +1378,21 @@ button {
   background: rgba(255, 255, 255, 0.025);
 }
 
-.qr-placeholder {
-  position: relative;
-  display: grid;
-  width: min(210px, 100%);
-  aspect-ratio: 1;
-  place-content: center;
-  gap: 9px;
+.qr-frame {
+  width: min(232px, 100%);
+  padding: 10px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 24px;
-  background: rgba(4, 5, 8, 0.52);
-  text-align: center;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35), 0 0 32px rgba(90, 218, 255, 0.1);
 }
 
-.qr-placeholder::before {
-  position: absolute;
-  inset: 18%;
-  border: 1px solid rgba(90, 218, 255, 0.12);
-  border-radius: 50%;
-  box-shadow: 0 0 34px rgba(94, 214, 255, 0.09);
-  content: "";
-}
-
-.qr-corners {
-  position: absolute;
-  inset: 11px;
-  border: 1px solid transparent;
-  border-top-color: rgba(255, 255, 255, 0.16);
-  border-bottom-color: rgba(255, 255, 255, 0.16);
+.contact-qr {
+  display: block;
+  width: 100%;
+  height: auto;
   border-radius: 16px;
-}
-
-.qr-placeholder strong,
-.qr-placeholder small {
-  position: relative;
-  z-index: 1;
-}
-
-.qr-placeholder strong {
-  font-size: 0.98rem;
-  font-weight: 650;
-}
-
-.qr-placeholder small {
-  color: rgba(255, 255, 255, 0.44);
-  font-size: 0.72rem;
+  object-fit: contain;
 }
 
 .contact-copy {

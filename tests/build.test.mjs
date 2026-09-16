@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import { readFile, stat } from "node:fs/promises";
+import { access, readFile, stat } from "node:fs/promises";
+import { constants } from "node:fs";
 
 const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
 const hosting = JSON.parse(
@@ -14,6 +15,30 @@ assert.match(html, /href="\/assets\/[^"]+\.css"/);
 assert.ok(
   (await stat(new URL("../dist/fonts/GeistPixel-Circle.woff2", import.meta.url))).size > 1000,
 );
+for (const fileName of ["ragnarok-trailer.mp4", "hospital-chaos.mp4", "chosen-by-billionaire.mp4"]) {
+  assert.ok(
+    (await stat(new URL(`../dist/videos/${fileName}`, import.meta.url))).size > 1_000_000,
+    `${fileName} 必须进入正式构建且不是空文件`,
+  );
+}
+assert.ok(
+  (await stat(new URL("../dist/contact/business-qr.jpg", import.meta.url))).size > 10_000,
+  "商务二维码必须进入正式构建",
+);
+for (const retiredFile of ["werewolf.mp4", "angel.mp4", "werewolf.jpg", "angel.jpg"]) {
+  await assert.rejects(
+    access(
+      new URL(
+        retiredFile.endsWith(".mp4")
+          ? `../dist/videos/${retiredFile}`
+          : `../dist/covers/${retiredFile}`,
+        import.meta.url,
+      ),
+      constants.F_OK,
+    ),
+    `${retiredFile} 必须从正式构建撤下`,
+  );
+}
 assert.equal(hosting.static.directory, "dist");
 assert.equal(hosting.static.not_found_handling, "single-page-application");
 

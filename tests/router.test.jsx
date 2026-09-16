@@ -77,10 +77,13 @@ describe("页面路由", () => {
     expect(container.textContent).not.toMatch(/[A-Za-z]{2,}/);
   });
 
-  it("联系页只显示二维码占位，不包含虚构二维码图片", () => {
-    const { container } = renderRoute("/contact");
-    expect(screen.getByText("二维码待上传")).toBeInTheDocument();
-    expect(container.querySelector("img")).not.toBeInTheDocument();
+  it("联系页展示真实商务二维码", () => {
+    renderRoute("/contact");
+    expect(screen.getByRole("img", { name: "幻核动漫商务联系二维码" })).toHaveAttribute(
+      "src",
+      "/contact/business-qr.jpg",
+    );
+    expect(screen.queryByText("二维码待上传")).not.toBeInTheDocument();
   });
 
   it("服务页清晰呈现两项核心业务与制作流程", () => {
@@ -100,6 +103,13 @@ describe("页面路由", () => {
     expect(screen.getByRole("heading", { name: "渡魂使者" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "二维动漫" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "游戏广告" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "诸神黄昏预告" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "医院闹翻天" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: "被当作小偷赶走，却被亿万富翁选中" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "狼人" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "天使" })).not.toBeInTheDocument();
     expect(screen.queryByText("精选项目即将呈现")).not.toBeInTheDocument();
   });
 
@@ -168,13 +178,13 @@ describe("页面路由", () => {
     expect(screen.getByRole("heading", { name: "商业广告作品正在整理" })).toBeInTheDocument();
   });
 
-  it("联系页说明合作准备信息并保留真实二维码位置", () => {
+  it("联系页说明合作准备信息并提供真实二维码", () => {
     renderRoute("/contact");
 
     expect(screen.getByRole("heading", { name: "开启下一次创作" })).toBeInTheDocument();
     expect(screen.getByRole("list", { name: "合作前请准备" })).toHaveTextContent("项目类型");
     expect(screen.getByRole("list", { name: "合作前请准备" })).toHaveTextContent("交付时间");
-    expect(screen.getByText("二维码待上传")).toBeInTheDocument();
+    expect(screen.getByRole("img", { name: "幻核动漫商务联系二维码" })).toBeInTheDocument();
   });
 
   it("减少动态效果时首页数字直接显示最终值", () => {

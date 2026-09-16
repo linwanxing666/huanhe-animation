@@ -1,3 +1,5 @@
+const contactQrSrc = `${import.meta.env.BASE_URL}contact/business-qr.jpg`;
+
 export function ContactPage() {
   return (
     <main className="route-page route-contact">
@@ -10,10 +12,12 @@ export function ContactPage() {
 
         <section className="contact-panel" aria-label="合作联系信息">
           <div className="qr-card">
-            <div className="qr-placeholder" aria-label="商务二维码">
-              <span className="qr-corners" aria-hidden="true" />
-              <strong>二维码待上传</strong>
-              <small>上传后可直接扫码沟通</small>
+            <div className="qr-frame">
+              <img
+                className="contact-qr"
+                src={contactQrSrc}
+                alt="幻核动漫商务联系二维码"
+              />
             </div>
           </div>
 
