@@ -1,6 +1,6 @@
 // 案例页唯一配置入口。
 // 新增作品时，复制下面的对象模板到 caseVideos 数组中并填写内容即可。
-// 视频和封面既可以使用云端地址，也可以使用 /videos/文件名.mp4、/covers/文件名.jpg 这样的本地路径。
+// 视频和封面既可以使用云端地址，也可以放在 public/videos 与 public/covers 目录中。
 //
 // {
 //   id: "唯一编号",
@@ -13,14 +13,16 @@
 //   orientation: "横屏或竖屏",
 // },
 
+const publicBase = import.meta.env.BASE_URL;
+
 export const caseVideos = [
   {
     id: "soul-guide",
     title: "渡魂使者",
     category: "3D动漫",
     summary: "三维动漫叙事样片，呈现暗黑奇幻氛围与电影化镜头语言。",
-    videoSrc: "/videos/soul-guide.mp4",
-    posterSrc: "/covers/soul-guide.jpg",
+    videoSrc: `${publicBase}videos/soul-guide.mp4`,
+    posterSrc: `${publicBase}covers/soul-guide.jpg`,
     duration: "01:24",
     orientation: "横屏",
   },
@@ -29,8 +31,8 @@ export const caseVideos = [
     title: "二维动漫",
     category: "2D动漫",
     summary: "二维动漫叙事样片，展示风格化角色、生活化表演与连续画面。",
-    videoSrc: "/videos/2d-anime.mp4",
-    posterSrc: "/covers/2d-anime.jpg",
+    videoSrc: `${publicBase}videos/2d-anime.mp4`,
+    posterSrc: `${publicBase}covers/2d-anime.jpg`,
     duration: "01:16",
     orientation: "横屏",
   },
@@ -39,8 +41,8 @@ export const caseVideos = [
     title: "怒江红石村",
     category: "仿真人",
     summary: "仿真人现实题材样片，展示人物情绪、写实环境与竖屏叙事。",
-    videoSrc: "/videos/redstone-village.mp4",
-    posterSrc: "/covers/redstone-village.jpg",
+    videoSrc: `${publicBase}videos/redstone-village.mp4`,
+    posterSrc: `${publicBase}covers/redstone-village.jpg`,
     duration: "01:48",
     orientation: "竖屏",
   },
@@ -49,8 +51,8 @@ export const caseVideos = [
     title: "狼人",
     category: "仿真人",
     summary: "仿真人奇幻题材样片，展示生物质感、氛围塑造与情绪冲击。",
-    videoSrc: "/videos/werewolf.mp4",
-    posterSrc: "/covers/werewolf.jpg",
+    videoSrc: `${publicBase}videos/werewolf.mp4`,
+    posterSrc: `${publicBase}covers/werewolf.jpg`,
     duration: "01:26",
     orientation: "竖屏",
   },
@@ -59,8 +61,8 @@ export const caseVideos = [
     title: "闪婚",
     category: "仿真人",
     summary: "仿真人都市情感样片，展示角色一致性、表演细节与短剧节奏。",
-    videoSrc: "/videos/flash-marriage.mp4",
-    posterSrc: "/covers/flash-marriage.jpg",
+    videoSrc: `${publicBase}videos/flash-marriage.mp4`,
+    posterSrc: `${publicBase}covers/flash-marriage.jpg`,
     duration: "01:03",
     orientation: "竖屏",
   },
@@ -69,8 +71,8 @@ export const caseVideos = [
     title: "天使",
     category: "仿真人",
     summary: "仿真人海外短剧样片，展示年龄角色、影调氛围与英语叙事场景。",
-    videoSrc: "/videos/angel.mp4",
-    posterSrc: "/covers/angel.jpg",
+    videoSrc: `${publicBase}videos/angel.mp4`,
+    posterSrc: `${publicBase}covers/angel.jpg`,
     duration: "02:06",
     orientation: "竖屏",
   },
@@ -79,8 +81,8 @@ export const caseVideos = [
     title: "欲望",
     category: "仿真人",
     summary: "仿真人悬疑题材样片，展示黑暗风格、道具细节与紧张叙事。",
-    videoSrc: "/videos/desire.mp4",
-    posterSrc: "/covers/desire.jpg",
+    videoSrc: `${publicBase}videos/desire.mp4`,
+    posterSrc: `${publicBase}covers/desire.jpg`,
     duration: "01:25",
     orientation: "竖屏",
   },
@@ -89,8 +91,8 @@ export const caseVideos = [
     title: "游戏广告",
     category: "游戏广告",
     summary: "三维游戏广告样片，展示角色塑造、剧情钩子与竖屏投放节奏。",
-    videoSrc: "/videos/game-ad.mp4",
-    posterSrc: "/covers/game-ad.jpg",
+    videoSrc: `${publicBase}videos/game-ad.mp4`,
+    posterSrc: `${publicBase}covers/game-ad.jpg`,
     duration: "00:30",
     orientation: "竖屏",
   },

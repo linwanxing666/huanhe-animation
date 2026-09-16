@@ -7,8 +7,10 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1",
     "build": "vite build",
+    "build:github-pages": "vite build --base /huanhe-animation/ && node scripts/prepare-github-pages.mjs",
     "test": "vitest run",
-    "test:build": "node tests/build.test.mjs"
+    "test:build": "node tests/build.test.mjs",
+    "test:github-pages": "node tests/github-pages-build.test.mjs"
   },
   "dependencies": {
     "react": "^19.1.1",
