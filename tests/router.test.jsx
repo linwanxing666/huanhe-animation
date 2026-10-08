@@ -198,7 +198,16 @@ describe("页面路由", () => {
     const video = container.querySelector("video");
     expect(video).toHaveAttribute("src", "https://example.com/sample.mp4");
     expect(video).toHaveAttribute("controls");
+    expect(video).toHaveAttribute("controlslist", "nodownload noremoteplayback");
+    expect(video).toHaveAttribute("disablepictureinpicture");
+    expect(video).toHaveAttribute("disableremoteplayback");
     expect(video).toHaveAttribute("autoplay");
+    const contextMenuEvent = new MouseEvent("contextmenu", {
+      bubbles: true,
+      cancelable: true,
+    });
+    expect(video.dispatchEvent(contextMenuEvent)).toBe(false);
+    expect(contextMenuEvent.defaultPrevented).toBe(true);
     expect(screen.getByRole("button", { name: "收起测试短剧" })).toBeInTheDocument();
   });
 

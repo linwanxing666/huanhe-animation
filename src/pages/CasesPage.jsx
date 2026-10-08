@@ -38,9 +38,13 @@ function CaseCard({ item }) {
             poster={item.posterSrc || undefined}
             aria-label={`正在播放${item.title}`}
             controls
+            controlsList="nodownload noremoteplayback"
+            disablePictureInPicture
+            disableRemotePlayback
             autoPlay
             playsInline
             preload="metadata"
+            onContextMenu={(event) => event.preventDefault()}
           />
         ) : (
           <>
