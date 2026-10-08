@@ -25,9 +25,10 @@ const appScript = readFileSync(
   "utf8",
 );
 assert.ok(
-  appScript.includes("/huanhe-animation/") &&
-    appScript.includes("videos/soul-guide.mp4"),
-  "案例视频必须包含 GitHub Pages 仓库前缀与正确文件路径",
+  appScript.includes(
+    "https://github.com/linwanxing666/huanhe-animation/releases/download/site-media-v1/",
+  ) && appScript.includes("soul-guide.mp4"),
+  "案例视频必须包含已发布的 GitHub 媒体直链",
 );
 assert.ok(
   appScript.includes("/huanhe-animation/") &&

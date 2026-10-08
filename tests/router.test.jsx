@@ -11,6 +11,7 @@ const configuredCase = {
   summary: "用于验证站内播放行为的测试作品。",
   videoSrc: "https://example.com/sample.mp4",
   posterSrc: "https://example.com/poster.jpg",
+  orientation: "竖屏",
 };
 
 const animatedCase = {
@@ -20,6 +21,7 @@ const animatedCase = {
   summary: "用于验证分类筛选的测试作品。",
   videoSrc: "https://example.com/animation.mp4",
   posterSrc: "https://example.com/animation.jpg",
+  orientation: "横屏",
 };
 
 function renderRoute(path) {
@@ -86,20 +88,47 @@ describe("页面路由", () => {
     expect(screen.queryByText("二维码待上传")).not.toBeInTheDocument();
   });
 
-  it("服务页清晰呈现两项核心业务与制作流程", () => {
+  it("服务页清晰呈现公司简介、业务范围与制作流程", () => {
     renderRoute("/services");
 
     expect(screen.getByRole("heading", { name: "从创意到成片" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "关于幻核动漫" })).toBeInTheDocument();
+    expect(screen.getByText(/专注于人工智能影像创作与数字内容制作/)).toBeInTheDocument();
+    const businessScope = screen.getByRole("list", { name: "业务范围" });
+    ["人工智能短剧", "仿真人影像", "二维动漫", "三维动漫", "游戏广告", "商业广告", "文旅影像"].forEach((label) => {
+      expect(within(businessScope).getByText(label)).toBeInTheDocument();
+    });
     expect(screen.getByRole("heading", { name: "人工智能短剧制作" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "广告商单制作" })).toBeInTheDocument();
-    expect(screen.getByRole("list", { name: "合作流程" })).toHaveTextContent("需求沟通");
-    expect(screen.getByRole("list", { name: "合作流程" })).toHaveTextContent("成片交付");
+    expect(screen.getByRole("button", { name: "查看人工智能短剧制作流程" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "查看广告商单制作流程" })).toBeInTheDocument();
+  });
+
+  it("服务卡片可展开各自的五阶段工作流程", () => {
+    renderRoute("/services");
+
+    fireEvent.click(screen.getByRole("button", { name: "查看人工智能短剧制作流程" }));
+
+    const shortDramaFlow = screen.getByRole("region", { name: "人工智能短剧制作工作流程" });
+    expect(within(shortDramaFlow).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(shortDramaFlow).getByText("剧本策划")).toBeInTheDocument();
+    expect(within(shortDramaFlow).getByRole("link", { name: "沟通短剧项目" })).toHaveAttribute("href", "/contact");
+    expect(screen.getByRole("button", { name: "收起人工智能短剧制作流程" })).toHaveAttribute("aria-expanded", "true");
+
+    fireEvent.click(screen.getByRole("button", { name: "查看广告商单制作流程" }));
+
+    expect(screen.queryByRole("region", { name: "人工智能短剧制作工作流程" })).not.toBeInTheDocument();
+    const advertisingFlow = screen.getByRole("region", { name: "广告商单制作工作流程" });
+    expect(within(advertisingFlow).getAllByRole("listitem")).toHaveLength(5);
+    expect(within(advertisingFlow).getByText("多规格成片交付")).toBeInTheDocument();
   });
 
   it("案例页展示已配置的真实作品", () => {
     renderRoute("/cases");
 
     expect(screen.getByRole("heading", { name: "每一帧，都为传播服务" })).toBeInTheDocument();
+    expect(screen.getByText("共 30 部作品")).toBeInTheDocument();
+    expect(screen.getByText("点击封面直接播放")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "渡魂使者" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "二维动漫" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "游戏广告" })).toBeInTheDocument();
@@ -112,6 +141,9 @@ describe("页面路由", () => {
     expect(screen.getByRole("heading", { name: "商业间谍" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "判官" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "全员黑化" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "解说漫·拯救狼" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "人前阿姨人后宝宝" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "美人鱼" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "狼人" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "天使" })).not.toBeInTheDocument();
     expect(screen.queryByText("精选项目即将呈现")).not.toBeInTheDocument();
@@ -122,6 +154,8 @@ describe("页面路由", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "3D动漫" }));
     expect(screen.getByRole("heading", { name: "判官" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "种田系统" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "人前阿姨人后宝宝预告" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "婚礼上的背叛" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "商业间谍" })).not.toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "全员黑化" })).not.toBeInTheDocument();
@@ -130,6 +164,8 @@ describe("页面路由", () => {
     expect(screen.getByRole("heading", { name: "婚礼上的背叛" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "商业间谍" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "全员黑化" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "小福宝进门，沈家要翻身" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "美人鱼" })).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "判官" })).not.toBeInTheDocument();
   });
 
@@ -146,6 +182,7 @@ describe("页面路由", () => {
       "https://example.com/poster.jpg",
     );
     expect(screen.getByRole("button", { name: "播放测试短剧" })).toBeInTheDocument();
+    expect(screen.getByText("竖屏")).toBeInTheDocument();
     expect(container.querySelector('a[href="https://example.com/sample.mp4"]')).not.toBeInTheDocument();
   });
 
@@ -177,6 +214,7 @@ describe("页面路由", () => {
       expect(within(filters).getByRole("button", { name: label })).toBeInTheDocument();
     });
     expect(within(filters).getByRole("button", { name: "全部" })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByText("共 2 部作品")).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "测试短剧" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "测试三维动漫" })).toBeInTheDocument();
   });

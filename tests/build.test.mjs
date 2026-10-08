@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { access, readFile, stat } from "node:fs/promises";
+import { access, readFile, readdir, stat } from "node:fs/promises";
 import { constants } from "node:fs";
 
 const html = await readFile(new URL("../dist/index.html", import.meta.url), "utf8");
@@ -15,6 +15,20 @@ assert.match(html, /href="\/assets\/[^"]+\.css"/);
 assert.ok(
   (await stat(new URL("../dist/fonts/GeistPixel-Circle.woff2", import.meta.url))).size > 1000,
 );
+const scriptName = (await readdir(new URL("../dist/assets/", import.meta.url))).find(
+  (fileName) => fileName.endsWith(".js"),
+);
+assert.ok(scriptName, "正式构建必须包含应用脚本");
+const appScript = await readFile(
+  new URL(`../dist/assets/${scriptName}`, import.meta.url),
+  "utf8",
+);
+assert.ok(
+  appScript.includes(
+    "https://github.com/linwanxing666/huanhe-animation/releases/download/site-media-v1/",
+  ),
+  "案例视频必须使用已发布的 GitHub 媒体直链",
+);
 for (const fileName of [
   "ragnarok-trailer.mp4",
   "hospital-chaos.mp4",
@@ -23,17 +37,48 @@ for (const fileName of [
   "corporate-spy.mp4",
   "judge.mp4",
   "all-corrupted.mp4",
+  "save-wolf-commentary.mp4",
+  "farming-system.mp4",
+  "aunt-baby.mp4",
+  "lucky-child-shen-family.mp4",
+  "family-reunion-banquet.mp4",
+  "heiress-takes-control.mp4",
+  "little-treasure.mp4",
+  "sweetheart.mp4",
+  "aunt-baby-trailer.mp4",
+  "ten-million-order.mp4",
+  "wife-in-car.mp4",
+  "triplets-marry-rich.mp4",
+  "black-gold-python.mp4",
+  "dragon-blood.mp4",
+  "touch-my-daughter.mp4",
+  "contract-husband.mp4",
+  "mermaid.mp4",
 ]) {
-  assert.ok(
-    (await stat(new URL(`../dist/videos/${fileName}`, import.meta.url))).size > 1_000_000,
-    `${fileName} 必须进入正式构建且不是空文件`,
-  );
+  assert.ok(appScript.includes(fileName), `${fileName} 必须进入正式构建配置`);
 }
 for (const fileName of [
   "wedding-betrayal.jpg",
   "corporate-spy.jpg",
   "judge.jpg",
   "all-corrupted.jpg",
+  "save-wolf-commentary.jpg",
+  "farming-system.jpg",
+  "aunt-baby.jpg",
+  "lucky-child-shen-family.jpg",
+  "family-reunion-banquet.jpg",
+  "heiress-takes-control.jpg",
+  "little-treasure.jpg",
+  "sweetheart.jpg",
+  "aunt-baby-trailer.jpg",
+  "ten-million-order.jpg",
+  "wife-in-car.jpg",
+  "triplets-marry-rich.jpg",
+  "black-gold-python.jpg",
+  "dragon-blood.jpg",
+  "touch-my-daughter.jpg",
+  "contract-husband.jpg",
+  "mermaid.jpg",
 ]) {
   assert.ok(
     (await stat(new URL(`../dist/covers/${fileName}`, import.meta.url))).size > 10_000,

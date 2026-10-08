@@ -49,6 +49,7 @@ function CaseCard({ item }) {
             ) : (
               <div className="case-poster-fallback" aria-hidden="true"><span>作品封面</span></div>
             )}
+            <span className="case-orientation">{item.orientation}</span>
             <button
               className="case-play"
               type="button"
@@ -113,9 +114,15 @@ export function CasesPage({ items = caseVideos }) {
         </div>
 
         {visibleItems.length > 0 ? (
-          <section className="case-gallery" aria-label="作品列表">
-            {visibleItems.map((item) => <CaseCard item={item} key={item.id} />)}
-          </section>
+          <>
+            <div className="case-gallery-head" aria-live="polite">
+              <p>共 {visibleItems.length} 部作品</p>
+              <span>点击封面直接播放</span>
+            </div>
+            <section className="case-gallery" aria-label="作品列表">
+              {visibleItems.map((item) => <CaseCard item={item} key={item.id} />)}
+            </section>
+          </>
         ) : <EmptyCases category={activeCategory} />}
       </div>
     </main>
